@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.eslint.json",
+  "include": [
+    "apps/api/drizzle.config.ts",
+    "apps/web/playwright.config.ts",
+    "apps/web/tests/**/*.ts",
+    "apps/web/vite.config.ts",
+    "scripts/**/*.ts"
+  ]
+}

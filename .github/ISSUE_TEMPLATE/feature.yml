@@ -1,0 +1,59 @@
+name: Product feature
+description: Propose a player-facing MVP outcome
+title: '[Feature]: '
+labels:
+  - 'type:feature'
+  - 'status:needs-refinement'
+body:
+  - type: markdown
+    attributes:
+      value: Link the request to the accepted PRD and describe one bounded outcome.
+  - type: textarea
+    id: objective
+    attributes:
+      label: Objective and user value
+      description: What should change for the player and why does it matter?
+    validations:
+      required: true
+  - type: input
+    id: origin
+    attributes:
+      label: Product origin
+      description: Link the exact PRD section or approved product decision.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: List observable and testable outcomes.
+    validations:
+      required: true
+  - type: textarea
+    id: exclusions
+    attributes:
+      label: Out of scope
+      description: Name adjacent behavior this issue will not deliver.
+    validations:
+      required: true
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencies
+      description: Link dependencies and describe their current state.
+    validations:
+      required: true
+  - type: textarea
+    id: impacts
+    attributes:
+      label: Cross-cutting impacts
+      description: Cover security, privacy, mobile, accessibility, AI, cost and instrumentation. Write None with a reason when an area does not apply.
+    validations:
+      required: true
+  - type: textarea
+    id: verification
+    attributes:
+      label: Verification scenarios
+      description: Describe the tests and evidence that prove completion.
+    validations:
+      required: true

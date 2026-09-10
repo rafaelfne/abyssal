@@ -1,0 +1,30 @@
+{
+  "name": "@abyssal/api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc -b",
+    "db:migrate": "tsx src/adapters/database/migrate.ts",
+    "dev": "tsx watch src/index.ts",
+    "start": "node dist/index.js",
+    "test": "vitest run src",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@abyssal/contracts": "workspace:*",
+    "drizzle-orm": "^0.45.2",
+    "fastify": "^5.12.3",
+    "pg": "^8.23.0",
+    "pg-boss": "^12.31.0",
+    "zod": "^4.6.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.2",
+    "@types/pg": "^8.23.1",
+    "drizzle-kit": "^0.31.10",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.3",
+    "vitest": "^5.0.0"
+  }
+}

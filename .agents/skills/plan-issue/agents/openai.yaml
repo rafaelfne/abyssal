@@ -1,0 +1,4 @@
+interface:
+  display_name: 'Plan Issue'
+  short_description: 'Plan a ready Abyssal issue without coding'
+  default_prompt: 'Use $plan-issue to produce a decision-complete plan for this Abyssal issue.'

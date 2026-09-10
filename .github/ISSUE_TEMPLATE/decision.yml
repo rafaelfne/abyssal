@@ -1,0 +1,43 @@
+name: Product or architecture decision
+description: Record a choice required before implementation
+title: '[Decision]: '
+labels:
+  - 'type:decision'
+  - 'needs-human'
+  - 'status:needs-refinement'
+body:
+  - type: textarea
+    id: context
+    attributes:
+      label: Context and decision required
+      description: Explain why delivery is blocked or why a durable choice is needed.
+    validations:
+      required: true
+  - type: input
+    id: authority
+    attributes:
+      label: Authority and affected source
+      description: Link the product document or ADR that will record the outcome.
+    validations:
+      required: true
+  - type: textarea
+    id: options
+    attributes:
+      label: Options and trade-offs
+      description: Compare viable choices using product value, complexity, cost and reversibility.
+    validations:
+      required: true
+  - type: textarea
+    id: recommendation
+    attributes:
+      label: Recommendation
+      description: Recommend one option and state the consequences.
+    validations:
+      required: true
+  - type: textarea
+    id: unblock
+    attributes:
+      label: Work unblocked by this decision
+      description: Link dependent issues or name the affected roadmap outcome.
+    validations:
+      required: true

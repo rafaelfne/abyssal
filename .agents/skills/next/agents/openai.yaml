@@ -1,0 +1,4 @@
+interface:
+  display_name: 'Recommend Next'
+  short_description: 'Choose the next ready Abyssal outcome'
+  default_prompt: 'Use $next to recommend the next ready Abyssal issue.'
