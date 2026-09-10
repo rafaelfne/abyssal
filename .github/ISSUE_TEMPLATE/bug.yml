@@ -1,0 +1,42 @@
+name: Bug report
+description: Report behavior that differs from an accepted rule
+title: '[Bug]: '
+labels:
+  - 'type:bug'
+  - 'status:needs-refinement'
+body:
+  - type: textarea
+    id: observed
+    attributes:
+      label: Observed behavior
+      description: Describe what happened and its impact.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior and authority
+      description: Describe the expected result and link the product rule or ADR.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: Provide minimal repeatable steps, environment and frequency.
+    validations:
+      required: true
+  - type: textarea
+    id: impacts
+    attributes:
+      label: Impact and boundaries
+      description: Cover data integrity, security, mobile, AI fallback, cost and affected scope.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Add logs without secrets, screenshots or recordings when available.
+    validations:
+      required: false

@@ -1,0 +1,41 @@
+name: Engineering task or spike
+description: Propose bounded engineering or discovery work
+title: '[Engineering]: '
+labels:
+  - 'type:chore'
+  - 'status:needs-refinement'
+body:
+  - type: textarea
+    id: objective
+    attributes:
+      label: Objective
+      description: State the engineering outcome or question to answer.
+    validations:
+      required: true
+  - type: input
+    id: origin
+    attributes:
+      label: Origin
+      description: Link the product document, ADR, issue or observed evidence.
+    validations:
+      required: true
+  - type: textarea
+    id: deliverables
+    attributes:
+      label: Deliverables and acceptance criteria
+      description: Define the bounded artifact or verified result.
+    validations:
+      required: true
+  - type: textarea
+    id: exclusions
+    attributes:
+      label: Out of scope
+    validations:
+      required: true
+  - type: textarea
+    id: impacts
+    attributes:
+      label: Risks and impacts
+      description: Cover compatibility, security, operations, cost and dependencies.
+    validations:
+      required: true

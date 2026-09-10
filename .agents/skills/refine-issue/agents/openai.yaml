@@ -1,0 +1,4 @@
+interface:
+  display_name: 'Refine Issue'
+  short_description: 'Make an Abyssal issue ready for delivery'
+  default_prompt: 'Use $refine-issue to refine this request into a ready Abyssal issue.'

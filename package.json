@@ -1,0 +1,40 @@
+{
+  "name": "abyssal-colony-manager",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.2.2",
+  "engines": {
+    "node": ">=22 <23"
+  },
+  "scripts": {
+    "build": "turbo run build",
+    "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm check:architecture && pnpm check:comments && pnpm check:skills && pnpm check:docs",
+    "check:architecture": "depcruise --config dependency-cruiser.config.mjs apps packages",
+    "check:comments": "tsx scripts/check-comments.ts",
+    "check:docs": "markdownlint-cli2 'README.md' 'AGENTS.md' 'CONTRIBUTING.md' 'CODE_OF_CONDUCT.md' 'SECURITY.md' '.agents/**/*.md' '.github/**/*.md' 'docs/**/*.md' && tsx scripts/check-doc-links.ts",
+    "check:skills": "tsx scripts/check-skills.ts",
+    "dev": "turbo run dev",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint .",
+    "test": "vitest run scripts && turbo run test",
+    "test:e2e": "pnpm --filter @abyssal/web test:e2e",
+    "typecheck": "tsc --noEmit -p tsconfig.tools.json && turbo run typecheck"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^22.20.2",
+    "dependency-cruiser": "^18.2.0",
+    "eslint": "^10.10.0",
+    "globals": "^17.12.0",
+    "markdownlint-cli2": "^0.23.2",
+    "prettier": "^3.9.6",
+    "tsx": "^4.21.0",
+    "turbo": "^2.10.12",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.70.0",
+    "vitest": "^5.0.0",
+    "yaml": "^2.9.0"
+  }
+}

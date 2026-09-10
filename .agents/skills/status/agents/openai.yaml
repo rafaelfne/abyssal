@@ -1,0 +1,4 @@
+interface:
+  display_name: 'Project Status'
+  short_description: 'Report evidence-backed Abyssal progress'
+  default_prompt: 'Use $status to summarize the current Abyssal project state.'
