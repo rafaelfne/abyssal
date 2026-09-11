@@ -73,6 +73,8 @@ Gameplay endpoints are introduced only by approved feature issues.
 - [ADR-0002: Pragmatic Clean Architecture](decisions/0002-pragmatic-clean-architecture.md)
 - [ADR-0003: Server-authoritative deterministic engine](decisions/0003-server-authoritative-deterministic-engine.md)
 - [ADR-0004: Fastify, Drizzle and pg-boss baseline](decisions/0004-fastify-drizzle-pg-boss.md)
+- [ADR-0005: Railway deployment topology for the MVP](decisions/0005-railway-mvp-deployment.md)
+- [ADR-0006: Google Gemini Flash narrative provider](decisions/0006-google-gemini-narrative-provider.md)
 
 ## Revisit after the MVP
 
