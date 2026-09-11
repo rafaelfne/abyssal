@@ -1,5 +1,12 @@
 import type { Game } from 'phaser';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { emitTelemetry } from './telemetry.js';
+
+type Route =
+  | { name: 'intro' }
+  | { name: 'expedition' }
+  | { name: 'crew'; crewId: string }
+  | { name: 'report' };
 
 const systems = [
   { label: 'Power', value: 'Stable' },
@@ -7,7 +14,80 @@ const systems = [
   { label: 'Crew', value: '3 aboard' },
 ];
 
-export function App() {
+function parseRoute(pathname: string): Route {
+  if (pathname === '/expedition') {
+    return { name: 'expedition' };
+  }
+  if (pathname === '/report') {
+    return { name: 'report' };
+  }
+  const crewMatch = pathname.match(/^\/crew\/([^/]+)$/);
+  const crewId = crewMatch?.[1];
+  if (crewId) {
+    return { name: 'crew', crewId: decodeURIComponent(crewId) };
+  }
+  return { name: 'intro' };
+}
+
+function useRoute() {
+  const [route, setRoute] = useState<Route>(() =>
+    parseRoute(window.location.pathname),
+  );
+
+  useEffect(() => {
+    if (route.name === 'intro' && window.location.pathname !== '/') {
+      window.history.replaceState({}, '', '/');
+    }
+    const handlePopState = () => {
+      const nextRoute = parseRoute(window.location.pathname);
+      if (nextRoute.name === 'intro' && window.location.pathname !== '/') {
+        window.history.replaceState({}, '', '/');
+      }
+      setRoute(nextRoute);
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  return route;
+}
+
+function RouteLink({
+  children,
+  pathname,
+  onNavigate,
+}: {
+  children: React.ReactNode;
+  pathname: string;
+  onNavigate?: () => void;
+}) {
+  return (
+    <a href={pathname} onClick={() => onNavigate?.()}>
+      {children}
+    </a>
+  );
+}
+
+function Introduction() {
+  return (
+    <section className="route-card">
+      <p className="eyebrow">First contact</p>
+      <h2>Keep the station alive.</h2>
+      <p>
+        Meet the crew, set a priority and guide a research station above an
+        alien ocean.
+      </p>
+      <RouteLink
+        pathname="/expedition"
+        onNavigate={() => emitTelemetry('onboarding_started')}
+      >
+        Start expedition
+      </RouteLink>
+    </section>
+  );
+}
+
+function StationPreview() {
   const mapHost = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -31,6 +111,72 @@ export function App() {
   }, []);
 
   return (
+    <section className="map-panel" aria-label="Station preview">
+      <div className="map-copy">
+        <p className="eyebrow">Expedition 001</p>
+        <h2>Foundation online</h2>
+        <p>The station awaits its first operational cycle.</p>
+      </div>
+      <div className="map-host" ref={mapHost} />
+    </section>
+  );
+}
+
+function Expedition() {
+  return (
+    <>
+      <section className="status-strip" aria-label="Station systems">
+        {systems.map((system) => (
+          <div className="status-item" key={system.label}>
+            <span>{system.label}</span>
+            <strong>{system.value}</strong>
+          </div>
+        ))}
+      </section>
+      <StationPreview />
+      <section className="foundation-card">
+        <span>Current phase</span>
+        <strong>Systems commissioning</strong>
+        <p>Gameplay begins with the first ready product issue.</p>
+      </section>
+    </>
+  );
+}
+
+function CrewDetails({ crewId }: { crewId: string }) {
+  return (
+    <section className="route-card">
+      <p className="eyebrow">Crew file</p>
+      <h2>Crew member {crewId}</h2>
+      <p>Crew details will be available when the first expedition is ready.</p>
+      <button type="button" onClick={() => window.history.back()}>
+        Back to previous screen
+      </button>
+    </section>
+  );
+}
+
+function Report() {
+  return (
+    <section className="route-card">
+      <p className="eyebrow">Expedition report</p>
+      <h2>Your report is waiting.</h2>
+      <p>Complete an expedition to review resources, morale and discoveries.</p>
+      <RouteLink pathname="/">Return to introduction</RouteLink>
+    </section>
+  );
+}
+
+export function App() {
+  const route = useRoute();
+  const headingRef = useRef<HTMLHeadingElement>(null);
+
+  useEffect(() => {
+    emitTelemetry('game_opened');
+    headingRef.current?.focus();
+  }, [route]);
+
+  return (
     <main className="app-shell">
       <header className="topbar">
         <div>
@@ -40,29 +186,35 @@ export function App() {
         <span className="signal" aria-label="Station link online" />
       </header>
 
-      <section className="status-strip" aria-label="Station systems">
-        {systems.map((system) => (
-          <div className="status-item" key={system.label}>
-            <span>{system.label}</span>
-            <strong>{system.value}</strong>
-          </div>
-        ))}
-      </section>
+      <p className="connection-status" role="status">
+        {navigator.onLine
+          ? 'Connection ready'
+          : 'Connection required to continue'}
+      </p>
 
-      <section className="map-panel" aria-label="Station preview">
-        <div className="map-copy">
-          <p className="eyebrow">Expedition 001</p>
-          <h2>Foundation online</h2>
-          <p>The station awaits its first operational cycle.</p>
-        </div>
-        <div className="map-host" ref={mapHost} />
-      </section>
+      <h2 className="route-heading" ref={headingRef} tabIndex={-1}>
+        {route.name === 'intro'
+          ? 'Introduction'
+          : route.name === 'expedition'
+            ? 'Expedition'
+            : route.name === 'crew'
+              ? 'Crew details'
+              : 'Report'}
+      </h2>
 
-      <section className="foundation-card">
-        <span>Current phase</span>
-        <strong>Systems commissioning</strong>
-        <p>Gameplay begins with the first ready product issue.</p>
-      </section>
+      <div className="route-content">
+        {route.name === 'intro' && <Introduction />}
+        {route.name === 'expedition' && <Expedition />}
+        {route.name === 'crew' && <CrewDetails crewId={route.crewId} />}
+        {route.name === 'report' && <Report />}
+      </div>
+
+      <nav className="bottom-nav" aria-label="Primary navigation">
+        <RouteLink pathname="/">Intro</RouteLink>
+        <RouteLink pathname="/expedition">Expedition</RouteLink>
+        <RouteLink pathname="/crew/explorer">Crew</RouteLink>
+        <RouteLink pathname="/report">Report</RouteLink>
+      </nav>
     </main>
   );
 }

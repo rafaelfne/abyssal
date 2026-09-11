@@ -7,6 +7,11 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
+      injectRegister: 'script',
+      workbox: {
+        navigateFallback: '/',
+        runtimeCaching: [],
+      },
       manifest: {
         name: 'Abyssal Colony Manager',
         short_name: 'Abyssal',
