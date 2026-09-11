@@ -31,6 +31,10 @@ body {
     #03131a;
 }
 
+a {
+  color: inherit;
+}
+
 button,
 input,
 textarea,
@@ -42,7 +46,9 @@ select {
   width: min(100%, 480px);
   min-height: 100dvh;
   margin: 0 auto;
-  padding: 20px 18px 28px;
+  padding: max(20px, env(safe-area-inset-top))
+    max(18px, env(safe-area-inset-right)) max(28px, env(safe-area-inset-bottom))
+    max(18px, env(safe-area-inset-left));
 }
 
 .topbar {
@@ -73,6 +79,104 @@ h1 {
   font-size: clamp(1.55rem, 7vw, 2.2rem);
   line-height: 1.02;
   letter-spacing: -0.04em;
+}
+
+.route-heading {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.route-heading:focus {
+  position: static;
+  width: auto;
+  height: auto;
+  margin: 0 0 14px;
+  overflow: visible;
+  clip: auto;
+  font-size: 1rem;
+}
+
+.connection-status {
+  margin: 0 0 14px;
+  color: #83a9a8;
+  font-size: 0.75rem;
+}
+
+.route-card {
+  display: grid;
+  gap: 14px;
+  padding: 24px 20px;
+  border: 1px solid rgba(141, 229, 221, 0.2);
+  border-radius: 24px;
+  background: rgba(8, 38, 47, 0.84);
+}
+
+.route-card h2,
+.route-card p {
+  margin-bottom: 0;
+}
+
+.route-card > a,
+.route-card > button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 10px 16px;
+  border: 1px solid #8de5dd;
+  border-radius: 12px;
+  color: #03131a;
+  background: #8de5dd;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.route-card > button {
+  cursor: pointer;
+}
+
+.bottom-nav {
+  position: sticky;
+  bottom: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-top: 18px;
+  padding: 8px max(8px, env(safe-area-inset-right))
+    max(8px, env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left));
+  border: 1px solid rgba(141, 229, 221, 0.2);
+  border-radius: 16px;
+  background: rgba(3, 19, 26, 0.92);
+  backdrop-filter: blur(14px);
+}
+
+.bottom-nav a {
+  display: grid;
+  min-height: 44px;
+  place-items: center;
+  border-radius: 10px;
+  color: #b8d4d1;
+  font-size: 0.76rem;
+  text-decoration: none;
+}
+
+.bottom-nav a:hover,
+.bottom-nav a:focus-visible {
+  color: #03131a;
+  background: #8de5dd;
+}
+
+.bottom-nav a:focus-visible,
+.route-card a:focus-visible,
+.route-card button:focus-visible {
+  outline: 3px solid #ffcf70;
+  outline-offset: 3px;
 }
 
 .signal {
@@ -189,7 +293,19 @@ h1 {
 
 @media (min-width: 760px) {
   .app-shell {
+    width: min(100%, 900px);
     padding-top: 36px;
+  }
+
+  .route-content {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  .bottom-nav {
+    max-width: 720px;
+    margin-right: auto;
+    margin-left: auto;
   }
 }
 
