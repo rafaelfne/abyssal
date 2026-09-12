@@ -101,9 +101,8 @@ function Introduction() {
 
 function StationPreview() {
   const mapHost = useRef<HTMLDivElement>(null);
-  const [selectedModuleId, setSelectedModuleId] = useState<StationModuleId | null>(
-    null,
-  );
+  const [selectedModuleId, setSelectedModuleId] =
+    useState<StationModuleId | null>(null);
   const [zoom, setZoom] = useState<number>(stationMapZoom.initial);
 
   useEffect(() => {
@@ -133,7 +132,8 @@ function StationPreview() {
     const host = mapHost.current;
 
     const handleSelection = (event: Event) => {
-      const intent = (event as CustomEvent<StationModuleSelectionIntent>).detail;
+      const intent = (event as CustomEvent<StationModuleSelectionIntent>)
+        .detail;
       setSelectedModuleId(intent.moduleId);
       emitTelemetry('module_selected', {
         moduleId: intent.moduleId,
@@ -256,7 +256,9 @@ function StationPreview() {
           </button>
           <button
             type="button"
-            onClick={() => sendIntent({ type: 'camera.reset', source: 'controls' })}
+            onClick={() =>
+              sendIntent({ type: 'camera.reset', source: 'controls' })
+            }
           >
             Reset view
           </button>

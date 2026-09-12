@@ -25,19 +25,27 @@ test('renders six station module controls and supports accessible selection', as
     page.locator('.map-host[data-map-ready="true"] canvas'),
   ).toBeVisible();
 
-  await expect(page.getByRole('button', { name: 'Habitation module' })).toBeVisible();
+  await expect(
+    page.getByRole('button', { name: 'Habitation module' }),
+  ).toBeVisible();
   await expect(
     page.getByRole('button', { name: 'Hydroponic cultivator' }),
   ).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Tidal generator' })).toBeVisible();
+  await expect(
+    page.getByRole('button', { name: 'Tidal generator' }),
+  ).toBeVisible();
   await expect(
     page.getByRole('button', { name: 'Water and air purifier' }),
   ).toBeVisible();
   await expect(page.getByRole('button', { name: 'Laboratory' })).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Submersible dock' })).toBeVisible();
+  await expect(
+    page.getByRole('button', { name: 'Submersible dock' }),
+  ).toBeVisible();
 
   await page.getByRole('button', { name: 'Laboratory' }).click();
-  await expect(page.locator('.map-status').getByText('Laboratory')).toBeVisible();
+  await expect(
+    page.locator('.map-status').getByText('Laboratory'),
+  ).toBeVisible();
   await expect(
     page
       .locator('.map-status')
@@ -48,7 +56,10 @@ test('renders six station module controls and supports accessible selection', as
 test('supports touch map selection and camera controls on the expedition map', async ({
   page,
 }, testInfo) => {
-  test.skip(testInfo.project.name !== 'mobile-chromium', 'Mobile viewport only');
+  test.skip(
+    testInfo.project.name !== 'mobile-chromium',
+    'Mobile viewport only',
+  );
   await page.goto('/expedition');
   await expect(
     page.locator('.map-host[data-map-ready="true"] canvas'),
@@ -57,14 +68,18 @@ test('supports touch map selection and camera controls on the expedition map', a
   await page.locator('.map-host canvas').tap({
     position: { x: 330, y: 420 },
   });
-  await expect(page.locator('.map-status').getByText('Submersible dock')).toBeVisible();
+  await expect(
+    page.locator('.map-status').getByText('Submersible dock'),
+  ).toBeVisible();
 
   await page
     .getByRole('button', { name: 'Zoom in' })
     .evaluate((element: HTMLButtonElement) => element.click());
   await expect
     .poll(async () => {
-      const zoomAfterIncrease = await page.locator('.map-status span').textContent();
+      const zoomAfterIncrease = await page
+        .locator('.map-status span')
+        .textContent();
       return Number(zoomAfterIncrease?.match(/\d+/)?.[0]);
     })
     .toBeGreaterThan(105);
@@ -72,7 +87,9 @@ test('supports touch map selection and camera controls on the expedition map', a
   await page
     .getByRole('button', { name: 'Reset view' })
     .evaluate((element: HTMLButtonElement) => element.click());
-  await expect(page.locator('.map-status').getByText(/Zoom 105%/)).toBeVisible();
+  await expect(
+    page.locator('.map-status').getByText(/Zoom 105%/),
+  ).toBeVisible();
 });
 
 test('supports direct routes, focus restoration and unknown-route redirect', async ({

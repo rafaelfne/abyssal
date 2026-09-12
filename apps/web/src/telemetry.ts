@@ -1,9 +1,7 @@
 import type { StationModuleId } from './game/station-map.js';
 
 export type TelemetryEvent =
-  | 'game_opened'
-  | 'onboarding_started'
-  | 'module_selected';
+  'game_opened' | 'onboarding_started' | 'module_selected';
 
 type TelemetryPayload = {
   event: TelemetryEvent;

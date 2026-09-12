@@ -17,7 +17,10 @@ import {
 
 class StationPreviewScene extends Phaser.Scene {
   private readonly parent: HTMLElement;
-  private readonly moduleRings = new Map<StationModuleId, Phaser.GameObjects.Arc>();
+  private readonly moduleRings = new Map<
+    StationModuleId,
+    Phaser.GameObjects.Arc
+  >();
   private selectedModuleId: StationModuleId | null = null;
   private lastDragPosition: { x: number; y: number } | null = null;
   private lastPinchDistance: number | null = null;
@@ -39,7 +42,12 @@ class StationPreviewScene extends Phaser.Scene {
     graphics.fillGradientStyle(0x0d6f7c, 0x0d6f7c, 0x03131a, 0x03131a, 1);
     graphics.fillRect(0, 0, width, height);
     graphics.fillStyle(0x8de5dd, 0.16);
-    graphics.fillEllipse(width * 0.5, height * 0.62, width * 0.9, height * 0.34);
+    graphics.fillEllipse(
+      width * 0.5,
+      height * 0.62,
+      width * 0.9,
+      height * 0.34,
+    );
     graphics.fillStyle(0xffcf70, 1);
     graphics.fillRoundedRect(
       stationPlatform.x - stationPlatform.width / 2,
