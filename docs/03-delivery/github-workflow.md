@@ -37,7 +37,7 @@ When Copilot (or Copilot Cloud Agent) is assigned directly to an issue on GitHub
    - Implement the approved scope adhering to clean architecture and code standards.
    - Collect executed test evidence.
 5. **Review and Verification (`InReview`)**:
-   - Open a linked pull request (`Closes #<issue>`) reporting executed check results.
+   - Always open a linked pull request (`Closes #<issue>`) reporting executed check results and ensure the PR is `Open` / ready for review. Never finish an implementation task without creating or un-drafting the PR.
    - Move the Project item and pull request to `InReview`.
    - Address any review feedback or CI check failures on the branch while keeping the stage in `InReview`.
 6. **Completion (`Done`)**:

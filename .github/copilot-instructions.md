@@ -25,7 +25,7 @@ When assigned directly to an issue on GitHub:
    - Create a branch off `origin/main` using `<type>/<issue>-<slug>` (e.g. `feat/42-crew-needs`).
    - Implement the approved scope following Clean Architecture and repository rules.
 4. **In Review (`InReview`)**:
-   - Open a pull request linking the issue (`Closes #<issue>`) with executed test evidence.
+   - Always open a linked pull request (`Closes #<issue>`) with executed test evidence and ensure it is marked as `Open` / ready for review (not draft or left uncreated).
    - Set the Project stage to `InReview`.
    - Fix review feedback or CI check failures on the branch while keeping the stage in `InReview`.
 5. **Done (`Done`)**:
