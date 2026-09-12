@@ -22,7 +22,7 @@ Use Node.js 22 and the pnpm version declared in `package.json`. Keep changes foc
 
 ## Branches and commits
 
-Human contributors use `<type>/<issue>-<short-slug>`, such as `feat/42-crew-needs`. Coding agents use `codex/<type>-<issue>-<short-slug>`.
+All contributors (humans and coding agents) use `<type>/<issue>-<short-slug>`, such as `feat/42-crew-needs` or `fix/15-auth-token`. Allowed types are `feat`, `fix`, `docs`, `refactor`, `test` and `chore`.
 
 Use Conventional Commit subjects. Pull requests are squash-merged after all required checks, resolved conversations and explicit maintainer approval.
 
