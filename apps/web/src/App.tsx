@@ -1,5 +1,17 @@
 import type { Game } from 'phaser';
 import { useEffect, useRef, useState } from 'react';
+import {
+  dispatchStationMapIntent,
+  getStationModule,
+  stationMapSelectionEvent,
+  stationMapSnapshotEvent,
+  stationMapZoom,
+  stationModules,
+  type StationMapIntent,
+  type StationMapSnapshot,
+  type StationModuleId,
+  type StationModuleSelectionIntent,
+} from './game/station-map.js';
 import { emitTelemetry } from './telemetry.js';
 
 type Route =
@@ -89,6 +101,10 @@ function Introduction() {
 
 function StationPreview() {
   const mapHost = useRef<HTMLDivElement>(null);
+  const [selectedModuleId, setSelectedModuleId] = useState<StationModuleId | null>(
+    null,
+  );
+  const [zoom, setZoom] = useState<number>(stationMapZoom.initial);
 
   useEffect(() => {
     if (!mapHost.current) {
@@ -110,14 +126,168 @@ function StationPreview() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!mapHost.current) {
+      return;
+    }
+    const host = mapHost.current;
+
+    const handleSelection = (event: Event) => {
+      const intent = (event as CustomEvent<StationModuleSelectionIntent>).detail;
+      setSelectedModuleId(intent.moduleId);
+      emitTelemetry('module_selected', {
+        moduleId: intent.moduleId,
+        source: intent.source,
+      });
+    };
+
+    const handleSnapshot = (event: Event) => {
+      const snapshot = (event as CustomEvent<StationMapSnapshot>).detail;
+      setZoom(snapshot.zoom);
+    };
+
+    host.addEventListener(stationMapSelectionEvent, handleSelection);
+    host.addEventListener(stationMapSnapshotEvent, handleSnapshot);
+
+    return () => {
+      host.removeEventListener(stationMapSelectionEvent, handleSelection);
+      host.removeEventListener(stationMapSnapshotEvent, handleSnapshot);
+    };
+  }, []);
+
+  const selectedModule = selectedModuleId
+    ? getStationModule(selectedModuleId)
+    : null;
+
+  const sendIntent = (intent: StationMapIntent) => {
+    if (!mapHost.current) {
+      return;
+    }
+    dispatchStationMapIntent(mapHost.current, intent);
+  };
+
   return (
-    <section className="map-panel" aria-label="Station preview">
-      <div className="map-copy">
-        <p className="eyebrow">Expedition 001</p>
-        <h2>Foundation online</h2>
-        <p>The station awaits its first operational cycle.</p>
+    <section className="map-panel" aria-label="Station map and controls">
+      <div className="map-stage">
+        <div className="map-copy">
+          <p className="eyebrow">Expedition 001</p>
+          <h2>Foundation online</h2>
+          <p>The station awaits its first operational cycle.</p>
+        </div>
+        <div className="map-host" ref={mapHost} />
       </div>
-      <div className="map-host" ref={mapHost} />
+      <div className="map-controls">
+        <div className="map-toolbar" aria-label="Station map camera controls">
+          <button
+            type="button"
+            onClick={() =>
+              sendIntent({
+                type: 'camera.pan',
+                deltaX: 0,
+                deltaY: 72,
+                source: 'controls',
+              })
+            }
+          >
+            Pan up
+          </button>
+          <button
+            type="button"
+            onClick={() =>
+              sendIntent({
+                type: 'camera.pan',
+                deltaX: -72,
+                deltaY: 0,
+                source: 'controls',
+              })
+            }
+          >
+            Pan right
+          </button>
+          <button
+            type="button"
+            onClick={() =>
+              sendIntent({
+                type: 'camera.pan',
+                deltaX: 72,
+                deltaY: 0,
+                source: 'controls',
+              })
+            }
+          >
+            Pan left
+          </button>
+          <button
+            type="button"
+            onClick={() =>
+              sendIntent({
+                type: 'camera.pan',
+                deltaX: 0,
+                deltaY: -72,
+                source: 'controls',
+              })
+            }
+          >
+            Pan down
+          </button>
+          <button
+            type="button"
+            onClick={() =>
+              sendIntent({
+                type: 'camera.zoom',
+                zoom: zoom + stationMapZoom.step,
+                source: 'controls',
+              })
+            }
+          >
+            Zoom in
+          </button>
+          <button
+            type="button"
+            onClick={() =>
+              sendIntent({
+                type: 'camera.zoom',
+                zoom: zoom - stationMapZoom.step,
+                source: 'controls',
+              })
+            }
+          >
+            Zoom out
+          </button>
+          <button
+            type="button"
+            onClick={() => sendIntent({ type: 'camera.reset', source: 'controls' })}
+          >
+            Reset view
+          </button>
+        </div>
+        <div className="module-grid" aria-label="Station module selection">
+          {stationModules.map((module) => (
+            <button
+              key={module.id}
+              type="button"
+              data-selected={selectedModuleId === module.id}
+              onClick={() =>
+                sendIntent({
+                  type: 'module.select',
+                  moduleId: module.id,
+                  source: 'controls',
+                })
+              }
+            >
+              {module.label}
+            </button>
+          ))}
+        </div>
+        <div className="map-status" aria-live="polite">
+          <strong>{selectedModule?.label ?? 'Select a module'}</strong>
+          <p>
+            {selectedModule?.detail ??
+              'Use the map or the buttons below to inspect a module.'}
+          </p>
+          <span>Zoom {Math.round(zoom * 100)}%</span>
+        </div>
+      </div>
     </section>
   );
 }

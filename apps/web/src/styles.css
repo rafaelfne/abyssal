@@ -229,13 +229,18 @@ h1 {
 }
 
 .map-panel {
-  position: relative;
-  overflow: hidden;
-  min-height: 480px;
+  display: grid;
+  gap: 16px;
   border: 1px solid rgba(141, 229, 221, 0.2);
   border-radius: 28px;
   background: #08262f;
   box-shadow: 0 28px 70px rgba(0, 0, 0, 0.32);
+}
+
+.map-stage {
+  position: relative;
+  overflow: hidden;
+  border-radius: 28px 28px 0 0;
 }
 
 .map-copy {
@@ -266,10 +271,69 @@ h1 {
   height: 480px !important;
 }
 
+.map-controls {
+  display: grid;
+  gap: 14px;
+  padding: 0 16px 16px;
+}
+
+.map-toolbar,
+.module-grid {
+  display: grid;
+  gap: 8px;
+}
+
+.map-toolbar {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.module-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.map-toolbar button,
+.module-grid button {
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid rgba(141, 229, 221, 0.28);
+  border-radius: 12px;
+  color: #e8fbf7;
+  background: rgba(7, 33, 40, 0.92);
+}
+
+.map-toolbar button:focus-visible,
+.module-grid button:focus-visible {
+  outline: 3px solid #ffcf70;
+  outline-offset: 2px;
+}
+
+.module-grid button[data-selected='true'] {
+  border-color: #ffcf70;
+  background: rgba(255, 207, 112, 0.2);
+}
+
+.map-status {
+  display: grid;
+  gap: 6px;
+  padding: 14px;
+  border-radius: 18px;
+  background: rgba(3, 19, 26, 0.62);
+}
+
+.map-status strong {
+  color: #ffcf70;
+}
+
+.map-status p,
+.map-status span {
+  margin-bottom: 0;
+  color: #b8d4d1;
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
 .foundation-card {
-  position: relative;
-  z-index: 3;
-  margin: -72px 14px 0;
+  margin-top: 14px;
   padding: 18px;
   border: 1px solid rgba(255, 207, 112, 0.24);
   border-radius: 18px;

@@ -1,4 +1,9 @@
-export type TelemetryEvent = 'game_opened' | 'onboarding_started';
+import type { StationModuleId } from './game/station-map.js';
+
+export type TelemetryEvent =
+  | 'game_opened'
+  | 'onboarding_started'
+  | 'module_selected';
 
 type TelemetryPayload = {
   event: TelemetryEvent;
@@ -6,32 +11,48 @@ type TelemetryPayload = {
   viewport: 'mobile' | 'desktop';
   platform: string;
   timestamp: string;
+  moduleId?: StationModuleId;
+  source?: 'map' | 'controls';
 };
 
-const emittedEvents = new Set<TelemetryEvent>();
+const emittedEvents = new Set<TelemetryEvent>([
+  'game_opened',
+  'onboarding_started',
+]);
 
-function getPayload(event: TelemetryEvent): TelemetryPayload {
+function getPayload(
+  event: TelemetryEvent,
+  detail?: Pick<TelemetryPayload, 'moduleId' | 'source'>,
+): TelemetryPayload {
   return {
     event,
     route: window.location.pathname,
     viewport: window.innerWidth < 760 ? 'mobile' : 'desktop',
     platform: navigator.platform,
     timestamp: new Date().toISOString(),
+    ...detail,
   };
 }
 
-export function emitTelemetry(event: TelemetryEvent) {
+export function emitTelemetry(
+  event: TelemetryEvent,
+  detail?: Pick<TelemetryPayload, 'moduleId' | 'source'>,
+) {
   if (emittedEvents.has(event)) {
     return;
   }
-  emittedEvents.add(event);
+  if (event !== 'module_selected') {
+    emittedEvents.add(event);
+  }
   try {
     window.dispatchEvent(
       new CustomEvent<TelemetryPayload>('abyssal:telemetry', {
-        detail: getPayload(event),
+        detail: getPayload(event, detail),
       }),
     );
   } catch {
-    emittedEvents.delete(event);
+    if (event !== 'module_selected') {
+      emittedEvents.delete(event);
+    }
   }
 }
