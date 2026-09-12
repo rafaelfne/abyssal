@@ -15,7 +15,7 @@ export default defineConfig({
     {
       name: 'mobile-chromium',
       use: {
-        ...devices['Desktop Chrome'],
+        ...devices['Pixel 5'],
         viewport: { height: 844, width: 390 },
       },
     },
