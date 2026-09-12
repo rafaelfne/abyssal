@@ -188,7 +188,7 @@ function StationPreview() {
               sendIntent({
                 type: 'camera.pan',
                 deltaX: 0,
-                deltaY: -72,
+                deltaY: 72,
                 source: 'controls',
               })
             }
@@ -200,7 +200,7 @@ function StationPreview() {
             onClick={() =>
               sendIntent({
                 type: 'camera.pan',
-                deltaX: 72,
+                deltaX: -72,
                 deltaY: 0,
                 source: 'controls',
               })
@@ -213,7 +213,7 @@ function StationPreview() {
             onClick={() =>
               sendIntent({
                 type: 'camera.pan',
-                deltaX: -72,
+                deltaX: 72,
                 deltaY: 0,
                 source: 'controls',
               })
@@ -227,7 +227,7 @@ function StationPreview() {
               sendIntent({
                 type: 'camera.pan',
                 deltaX: 0,
-                deltaY: 72,
+                deltaY: -72,
                 source: 'controls',
               })
             }

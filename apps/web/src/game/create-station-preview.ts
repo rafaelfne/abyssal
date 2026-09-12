@@ -26,6 +26,106 @@ class StationPreviewScene extends Phaser.Scene {
   private lastDragPosition: { x: number; y: number } | null = null;
   private lastPinchDistance: number | null = null;
   private draggedSincePointerDown = false;
+  private readonly handlePointerMove = (pointer: Phaser.Input.Pointer) => {
+    const activePointers = this.input.manager.pointers.filter(
+      (candidate) => candidate.isDown,
+    );
+
+    if (activePointers.length >= 2) {
+      this.draggedSincePointerDown = true;
+      const firstPointer = activePointers[0];
+      const secondPointer = activePointers[1];
+
+      if (!firstPointer || !secondPointer) {
+        return;
+      }
+
+      const pinchDistance = Phaser.Math.Distance.Between(
+        firstPointer.x,
+        firstPointer.y,
+        secondPointer.x,
+        secondPointer.y,
+      );
+      const currentState = this.getCameraState();
+
+      if (this.lastPinchDistance) {
+        this.setCameraState(
+          setCameraZoom(
+            currentState,
+            { width: this.scale.width, height: this.scale.height },
+            (currentState.zoom * pinchDistance) / this.lastPinchDistance,
+            {
+              x: (firstPointer.x + secondPointer.x) / 2,
+              y: (firstPointer.y + secondPointer.y) / 2,
+            },
+          ),
+        );
+      }
+
+      this.lastPinchDistance = pinchDistance;
+      this.lastDragPosition = null;
+      return;
+    }
+
+    this.lastPinchDistance = null;
+
+    if (!pointer.isDown) {
+      this.lastDragPosition = null;
+      return;
+    }
+
+    if (!this.lastDragPosition) {
+      this.lastDragPosition = { x: pointer.x, y: pointer.y };
+      return;
+    }
+
+    if (
+      Phaser.Math.Distance.Between(
+        pointer.x,
+        pointer.y,
+        this.lastDragPosition.x,
+        this.lastDragPosition.y,
+      ) > StationPreviewScene.dragThreshold
+    ) {
+      this.draggedSincePointerDown = true;
+    }
+
+    this.setCameraState(
+      panCameraState(
+        this.getCameraState(),
+        { width: this.scale.width, height: this.scale.height },
+        pointer.x - this.lastDragPosition.x,
+        pointer.y - this.lastDragPosition.y,
+      ),
+    );
+    this.lastDragPosition = { x: pointer.x, y: pointer.y };
+  };
+  private readonly handlePointerDown = () => {
+    const activePointers = this.input.manager.pointers.filter(
+      (candidate) => candidate.isDown,
+    );
+
+    if (activePointers.length === 1) {
+      this.draggedSincePointerDown = false;
+    }
+  };
+  private readonly handlePointerUp = () => {
+    const activePointers = this.input.manager.pointers.filter(
+      (candidate) => candidate.isDown,
+    );
+
+    if (activePointers.length === 0) {
+      this.lastDragPosition = null;
+      this.lastPinchDistance = null;
+      this.draggedSincePointerDown = false;
+      return;
+    }
+
+    this.lastDragPosition = null;
+    if (activePointers.length < 2) {
+      this.lastPinchDistance = null;
+    }
+  };
 
   constructor(parent: HTMLElement) {
     super('station-preview');
@@ -112,110 +212,14 @@ class StationPreviewScene extends Phaser.Scene {
     this.events.on('shutdown', () => {
       delete this.parent.dataset.mapReady;
       this.parent.removeEventListener(stationMapIntentEvent, this.handleIntent);
+      this.input.off('pointermove', this.handlePointerMove);
+      this.input.off('pointerdown', this.handlePointerDown);
+      this.input.off('pointerup', this.handlePointerUp);
     });
 
-    this.input.on('pointermove', (pointer: Phaser.Input.Pointer) => {
-      const activePointers = this.input.manager.pointers.filter(
-        (candidate) => candidate.isDown,
-      );
-
-      if (activePointers.length >= 2) {
-        this.draggedSincePointerDown = true;
-        const firstPointer = activePointers[0];
-        const secondPointer = activePointers[1];
-
-        if (!firstPointer || !secondPointer) {
-          return;
-        }
-
-        const pinchDistance = Phaser.Math.Distance.Between(
-          firstPointer.x,
-          firstPointer.y,
-          secondPointer.x,
-          secondPointer.y,
-        );
-        const currentState = this.getCameraState();
-
-        if (this.lastPinchDistance) {
-          this.setCameraState(
-            setCameraZoom(
-              currentState,
-              { width: this.scale.width, height: this.scale.height },
-              (currentState.zoom * pinchDistance) / this.lastPinchDistance,
-              {
-                x: (firstPointer.x + secondPointer.x) / 2,
-                y: (firstPointer.y + secondPointer.y) / 2,
-              },
-            ),
-          );
-        }
-
-        this.lastPinchDistance = pinchDistance;
-        this.lastDragPosition = null;
-        return;
-      }
-
-      this.lastPinchDistance = null;
-
-      if (!pointer.isDown) {
-        this.lastDragPosition = null;
-        return;
-      }
-
-      if (!this.lastDragPosition) {
-        this.lastDragPosition = { x: pointer.x, y: pointer.y };
-        return;
-      }
-
-      if (
-        Phaser.Math.Distance.Between(
-          pointer.x,
-          pointer.y,
-          this.lastDragPosition.x,
-          this.lastDragPosition.y,
-        ) > StationPreviewScene.dragThreshold
-      ) {
-        this.draggedSincePointerDown = true;
-      }
-
-      this.setCameraState(
-        panCameraState(
-          this.getCameraState(),
-          { width: this.scale.width, height: this.scale.height },
-          pointer.x - this.lastDragPosition.x,
-          pointer.y - this.lastDragPosition.y,
-        ),
-      );
-      this.lastDragPosition = { x: pointer.x, y: pointer.y };
-    });
-
-    this.input.on('pointerdown', () => {
-      const activePointers = this.input.manager.pointers.filter(
-        (candidate) => candidate.isDown,
-      );
-
-      if (activePointers.length === 1) {
-        this.draggedSincePointerDown = false;
-      }
-    });
-
-    this.input.on('pointerup', () => {
-      const activePointers = this.input.manager.pointers.filter(
-        (candidate) => candidate.isDown,
-      );
-
-      if (activePointers.length === 0) {
-        this.lastDragPosition = null;
-        this.lastPinchDistance = null;
-        this.draggedSincePointerDown = false;
-        return;
-      }
-
-      this.lastDragPosition = null;
-      if (activePointers.length < 2) {
-        this.lastPinchDistance = null;
-      }
-    });
+    this.input.on('pointermove', this.handlePointerMove);
+    this.input.on('pointerdown', this.handlePointerDown);
+    this.input.on('pointerup', this.handlePointerUp);
 
     this.emitSnapshot();
   }

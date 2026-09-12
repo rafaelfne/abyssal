@@ -88,4 +88,19 @@ describe('station map camera bounds', () => {
       stationMapWorld.height - mobileViewport.height / focusedState.zoom,
     );
   });
+
+  it('clamps edge module centering to the world boundary', () => {
+    const focusedState = centerCameraOnModule(
+      {
+        scrollX: 120,
+        scrollY: 40,
+        zoom: stationMapZoom.initial,
+      },
+      mobileViewport,
+      'habitation',
+    );
+
+    expect(focusedState.scrollX).toBe(0);
+    expect(focusedState.scrollY).toBeGreaterThanOrEqual(0);
+  });
 });
