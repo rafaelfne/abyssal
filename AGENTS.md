@@ -17,11 +17,13 @@ Do not silently resolve a product contradiction in code. Record the decision in 
 ## Issue and pull request workflow
 
 - Every tracked change starts from an approved GitHub issue.
+- Issues move through 5 GitHub Project stages: `Refining` > `Ready` > `In Progress` > `InReview` > `Done`.
+- When assigned directly to an issue on GitHub, Copilot evaluates the Definition of Ready: posts questions in issue comments and sets stage to `Refining` (`needs-human`) if information is missing, or transitions the issue through `Ready` -> `In Progress` -> `InReview` -> `Done`.
 - Do not implement an issue that does not satisfy the Definition of Ready.
 - Keep one coherent product outcome per branch and pull request.
-- Link the pull request to its issue and include executed verification evidence.
+- Link the pull request to its issue (`Closes #<issue>`) and include executed verification evidence.
 - Agents and external contributors must not merge without Rafael's explicit approval.
-- Labels describe state or requested work. They do not start background work.
+- Labels and Project fields describe state. Active work requires an assignee, explicit invocation or an open linked pull request.
 
 Read [the delivery workflow](docs/03-delivery/github-workflow.md) before planning or implementation.
 

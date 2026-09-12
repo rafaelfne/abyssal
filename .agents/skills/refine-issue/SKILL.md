@@ -19,6 +19,6 @@ Produce or update an issue with:
 - Security, privacy, mobile, accessibility, AI, cost and instrumentation impacts.
 - Verification scenarios.
 
-Separate missing human decisions from technical choices. Apply `needs-human` only when a person, credential owner or external authority must decide. Do not apply `status:ready` while a product question or dependency remains unresolved.
+Separate missing human decisions from technical choices. Apply `needs-human` and keep or set Project stage to `Refining` when a person, credential owner or external authority must decide. Do not apply `status:ready` or move Project stage to `Ready` while a product question or dependency remains unresolved. Once Definition of Ready is satisfied, update the issue body, apply `status:ready`, and move Project stage to `Ready`.
 
 Draft first. Mutate GitHub only when the user explicitly asked to create or update the issue. Do not implement code.
