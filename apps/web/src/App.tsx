@@ -193,7 +193,7 @@ function StationPreview() {
               })
             }
           >
-            Pan up
+            Pan down
           </button>
           <button
             type="button"
@@ -206,7 +206,7 @@ function StationPreview() {
               })
             }
           >
-            Pan right
+            Pan left
           </button>
           <button
             type="button"
@@ -219,7 +219,7 @@ function StationPreview() {
               })
             }
           >
-            Pan left
+            Pan right
           </button>
           <button
             type="button"
@@ -232,7 +232,7 @@ function StationPreview() {
               })
             }
           >
-            Pan down
+            Pan up
           </button>
           <button
             type="button"

@@ -30,6 +30,12 @@ test('renders six station module controls and supports accessible selection', as
   await expect(
     page.getByRole('group', { name: 'Station module selection' }),
   ).toBeVisible();
+  await expect(
+    page.locator('.map-status').getByText('Select a module'),
+  ).toBeVisible();
+  await expect(
+    page.locator('.map-status').getByText('Zoom 105%'),
+  ).toBeVisible();
 
   await expect(
     page.getByRole('button', { name: 'Habitation module' }),
