@@ -16,6 +16,7 @@ import {
 } from './station-map.js';
 
 class StationPreviewScene extends Phaser.Scene {
+  private static readonly dragThreshold = 10;
   private readonly parent: HTMLElement;
   private readonly moduleRings = new Map<
     StationModuleId,
@@ -24,6 +25,7 @@ class StationPreviewScene extends Phaser.Scene {
   private selectedModuleId: StationModuleId | null = null;
   private lastDragPosition: { x: number; y: number } | null = null;
   private lastPinchDistance: number | null = null;
+  private draggedSincePointerDown = false;
 
   constructor(parent: HTMLElement) {
     super('station-preview');
@@ -82,6 +84,9 @@ class StationPreviewScene extends Phaser.Scene {
       marker.setStrokeStyle(3, 0xe8fbf7, 0.72);
       marker.setInteractive();
       marker.on('pointerup', () => {
+        if (this.draggedSincePointerDown) {
+          return;
+        }
         this.selectModule(module.id, 'map');
       });
 
@@ -115,6 +120,7 @@ class StationPreviewScene extends Phaser.Scene {
       );
 
       if (activePointers.length >= 2) {
+        this.draggedSincePointerDown = true;
         const firstPointer = activePointers[0];
         const secondPointer = activePointers[1];
 
@@ -161,6 +167,17 @@ class StationPreviewScene extends Phaser.Scene {
         return;
       }
 
+      if (
+        Phaser.Math.Distance.Between(
+          pointer.x,
+          pointer.y,
+          this.lastDragPosition.x,
+          this.lastDragPosition.y,
+        ) > StationPreviewScene.dragThreshold
+      ) {
+        this.draggedSincePointerDown = true;
+      }
+
       this.setCameraState(
         panCameraState(
           this.getCameraState(),
@@ -172,9 +189,14 @@ class StationPreviewScene extends Phaser.Scene {
       this.lastDragPosition = { x: pointer.x, y: pointer.y };
     });
 
+    this.input.on('pointerdown', () => {
+      this.draggedSincePointerDown = false;
+    });
+
     this.input.on('pointerup', () => {
       this.lastDragPosition = null;
       this.lastPinchDistance = null;
+      this.draggedSincePointerDown = false;
     });
 
     this.emitSnapshot();

@@ -13,7 +13,8 @@ type TelemetryPayload = {
   source?: 'map' | 'controls';
 };
 
-const emittedEvents = new Set<TelemetryEvent>([
+const emittedEvents = new Set<TelemetryEvent>();
+const singleEmissionEvents = new Set<TelemetryEvent>([
   'game_opened',
   'onboarding_started',
 ]);
@@ -36,10 +37,10 @@ export function emitTelemetry(
   event: TelemetryEvent,
   detail?: Pick<TelemetryPayload, 'moduleId' | 'source'>,
 ) {
-  if (emittedEvents.has(event)) {
+  if (singleEmissionEvents.has(event) && emittedEvents.has(event)) {
     return;
   }
-  if (event !== 'module_selected') {
+  if (singleEmissionEvents.has(event)) {
     emittedEvents.add(event);
   }
   try {
@@ -49,7 +50,7 @@ export function emitTelemetry(
       }),
     );
   } catch {
-    if (event !== 'module_selected') {
+    if (singleEmissionEvents.has(event)) {
       emittedEvents.delete(event);
     }
   }
