@@ -177,7 +177,11 @@ function StationPreview() {
         <div className="map-host" ref={mapHost} />
       </div>
       <div className="map-controls">
-        <div className="map-toolbar" aria-label="Station map camera controls">
+        <div
+          aria-label="Station map camera controls"
+          className="map-toolbar"
+          role="group"
+        >
           <button
             type="button"
             onClick={() =>
@@ -263,9 +267,14 @@ function StationPreview() {
             Reset view
           </button>
         </div>
-        <div className="module-grid" aria-label="Station module selection">
+        <div
+          aria-label="Station module selection"
+          className="module-grid"
+          role="group"
+        >
           {stationModules.map((module) => (
             <button
+              aria-pressed={selectedModuleId === module.id}
               key={module.id}
               type="button"
               data-selected={selectedModuleId === module.id}

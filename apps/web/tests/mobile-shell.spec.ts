@@ -24,6 +24,12 @@ test('renders six station module controls and supports accessible selection', as
   await expect(
     page.locator('.map-host[data-map-ready="true"] canvas'),
   ).toBeVisible();
+  await expect(
+    page.getByRole('group', { name: 'Station map camera controls' }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole('group', { name: 'Station module selection' }),
+  ).toBeVisible();
 
   await expect(
     page.getByRole('button', { name: 'Habitation module' }),
@@ -51,6 +57,9 @@ test('renders six station module controls and supports accessible selection', as
       .locator('.map-status')
       .getByText('Analysis, discoveries and expedition research.'),
   ).toBeVisible();
+  await expect(
+    page.getByRole('button', { name: 'Laboratory' }),
+  ).toHaveAttribute('aria-pressed', 'true');
 });
 
 test('supports touch map selection and camera controls on the expedition map', async ({

@@ -190,13 +190,31 @@ class StationPreviewScene extends Phaser.Scene {
     });
 
     this.input.on('pointerdown', () => {
-      this.draggedSincePointerDown = false;
+      const activePointers = this.input.manager.pointers.filter(
+        (candidate) => candidate.isDown,
+      );
+
+      if (activePointers.length === 1) {
+        this.draggedSincePointerDown = false;
+      }
     });
 
     this.input.on('pointerup', () => {
+      const activePointers = this.input.manager.pointers.filter(
+        (candidate) => candidate.isDown,
+      );
+
+      if (activePointers.length === 0) {
+        this.lastDragPosition = null;
+        this.lastPinchDistance = null;
+        this.draggedSincePointerDown = false;
+        return;
+      }
+
       this.lastDragPosition = null;
-      this.lastPinchDistance = null;
-      this.draggedSincePointerDown = false;
+      if (activePointers.length < 2) {
+        this.lastPinchDistance = null;
+      }
     });
 
     this.emitSnapshot();
