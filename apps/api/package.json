@@ -14,7 +14,7 @@
   "dependencies": {
     "@abyssal/contracts": "workspace:*",
     "drizzle-orm": "^0.45.2",
-    "fastify": "^5.12.3",
+    "fastify": "^5.12.5",
     "pg": "^8.23.0",
     "pg-boss": "^12.31.0",
     "zod": "^4.6.2"
